@@ -1,6 +1,7 @@
 import './App.scss';
-import Nav from './component/navigation/nav';
+// import Nav from './component/navigation/nav';
 import Login from './component/login/login';
+import Register from './component/register/register';
 import {
   BrowserRouter as Router,
   Switch,
@@ -24,6 +25,9 @@ function App() {
           </Route>
           <Route path="/login">
             <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
           </Route>
           <Route path="/" exact>
             Home
