@@ -1,16 +1,77 @@
 import "./register.scss"
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+
 const Register = (props) => {
+    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [confirmPassword, setConfirmPassword] = useState("");
+    const [phone, setPhone] = useState("");
+
+    const setDefaultInputValue = {
+        checkInputEmail: true,
+        checkInputUsername: true,
+        checkInputPassword: true,
+        checkInputConfirmPassword: true,
+        checkInputPhone: true
+    }
+    const [checkInputValid, setInputValid] = useState(setDefaultInputValue);
+
     let history = useHistory();
     const handleHaveAccountButton = () => {
         history.push("/login");
     }
+
+    const handleRegisterButton = () => {
+        let check = isValidateInfor();
+        if (check) {
+            axios.post("http://localhost:8001/api/v1/register", { email, username, password, phone })
+        }
+    }
+
+    const isValidateInfor = () => {
+        setInputValid(setDefaultInputValue);
+        if (!email) {
+            setInputValid({ ...setDefaultInputValue, checkInputEmail: false })
+            toast.error("Missing email address");
+            return false;
+        }
+        let re = /\S+@\S+\.\S+/;
+        if (!re.test(email)) {
+            setInputValid({ ...setDefaultInputValue, checkInputEmail: false })
+            toast.error("Email is not valid")
+            return false;
+        }
+        if (!username) {
+            toast.error("Missing username");
+            setInputValid({ ...setDefaultInputValue, checkInputUsername: false })
+            return false;
+        }
+        if (!password) {
+            toast.error("Missing password");
+            setInputValid({ ...setDefaultInputValue, checkInputPassword: false })
+            return false;
+        }
+        if (password !== confirmPassword) {
+            toast.error("Password is not match");
+            setInputValid({ ...setDefaultInputValue, checkInputConfirmPassword: false })
+            return false;
+        }
+        if (!phone) {
+            toast.error("Missing phone number");
+            setInputValid({ ...setDefaultInputValue, checkInputPhone: false })
+            return false;
+        }
+        return true;
+    }
+
     useEffect(() => {
-        axios.get("http://localhost:8001/getApi").then(data => {
-            console.log("Check data", data)
-        })
+        // axios.get("http://localhost:8001/api/v1/getApi").then(data => {
+        //     console.log("Check data", data)
+        // })
     }, [])
     return (
         <div className="register-container">
@@ -30,25 +91,45 @@ const Register = (props) => {
                         </div>
                         <div className="form-group">
                             <label>Email:</label>
-                            <input type="text" className="form-control" placeholder="Email address"></input>
+                            <input type="text"
+                                className={checkInputValid.checkInputEmail ? "form-control" : "form-control is-invalid"}
+                                placeholder="Email address"
+                                value={email} onChange={(event) => setEmail(event.target.value)}
+                            ></input>
                         </div>
                         <div className="form-group">
                             <label>Username:</label>
-                            <input type="text" className="form-control" placeholder="Username"></input>
+                            <input type="text"
+                                className={checkInputValid.checkInputUsername ? "form-control" : "form-control is-invalid"}
+                                placeholder="Username"
+                                value={username} onChange={(event) => setUsername(event.target.value)}
+                            ></input>
                         </div>
                         <div className="form-group">
                             <label>Password:</label>
-                            <input type="password" className="form-control" placeholder="Password"></input>
+                            <input type="password"
+                                className={checkInputValid.checkInputPassword ? "form-control" : "form-control is-invalid"}
+                                placeholder="Password"
+                                value={password} onChange={(event) => setPassword(event.target.value)}
+                            ></input>
                         </div>
                         <div className="form-group">
                             <label>Re-enter password:</label>
-                            <input type="password" className="form-control" placeholder="Re-enter password"></input>
+                            <input type="password"
+                                className={checkInputValid.checkInputConfirmPassword ? "form-control" : "form-control is-invalid"}
+                                placeholder="Re-enter password"
+                                value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
+                            ></input>
                         </div>
                         <div className="form-group">
                             <label>Phone number:</label>
-                            <input type="text" className="form-control" placeholder="Your phone number"></input>
+                            <input type="text"
+                                className={checkInputValid.checkInputPhone ? "form-control" : "form-control is-invalid"}
+                                placeholder="Your phone number"
+                                value={phone} onChange={(event) => setPhone(event.target.value)}
+                            ></input>
                         </div>
-                        <button className="btn btn-primary">Register:</button>
+                        <button className="btn btn-primary" type="submit" onClick={() => handleRegisterButton()}>Register</button>
                         <hr className="my-1" />
                         <div className="text-center">
                             <button className="btn btn-success" onClick={() => handleHaveAccountButton()}>Already've an account. Login</button>
