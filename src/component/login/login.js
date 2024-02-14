@@ -1,10 +1,45 @@
 import "./login.scss"
 import { useHistory } from "react-router-dom";
+import { useState } from 'react'
+import { toast } from 'react-toastify';
+import { loginService } from '../../service/userService'
+
 const Login = (props) => {
     let history = useHistory();
-    const handleLoginButton = () => {
+    const handleRegisterButton = () => {
         history.push("/register");
     }
+
+    const [value, setInput] = useState("");
+    const [password, setPassword] = useState("");
+    const defaultState = {
+        isValue: true,
+        isPassword: true
+    }
+    const [checkInputValid, setInputValid] = useState(defaultState);
+
+    const validateInput = () => {
+        setInputValid(defaultState);
+        if (!value) {
+            toast.error("Email or phone is empty");
+            setInputValid({ ...defaultState, isValue: false });
+            return false;
+        }
+        if (!password) {
+            toast.error("Password is empty");
+            setInputValid({ ...defaultState, isPassword: false });
+            return false;
+        }
+        return true;
+    }
+
+    const handleLoginButton = async () => {
+        let check = validateInput();
+        if (check) {
+            let responseData = await loginService(value, password);
+        }
+    }
+
     return (
         <div className="login-container">
             <div className="container">
@@ -21,13 +56,25 @@ const Login = (props) => {
                         <div className="brand d-sm-none">
                             user management
                         </div>
-                        <input type="text" className="form-control" placeholder="Email address or your phone number"></input>
-                        <input type="password" className="form-control" placeholder="Password"></input>
-                        <button className="btn btn-primary">Login</button>
+                        <input type="text"
+                            className={checkInputValid.isValue ? "form-control" : "form-control is-invalid"}
+                            placeholder="Email address or your phone number"
+                            value={value} onChange={(event) => setInput(event.target.value)}
+                        ></input>
+                        <input type="password"
+                            className={checkInputValid.isPassword ? "form-control" : "form-control is-invalid"}
+                            placeholder="Password"
+                            value={password} onChange={(event) => setPassword(event.target.value)}
+                        ></input>
+                        <button
+                            className="btn btn-primary"
+                            type="submit"
+                            onClick={() => handleLoginButton()}
+                        >Login</button>
                         <span className="text-center"><a href="#" className="forgot-password">Forgot your password?</a></span>
-                        <hr  className="my-1" />
+                        <hr className="my-1" />
                         <div className="text-center">
-                            <button className="btn btn-success"  onClick={() => handleLoginButton()}>Create new account</button>
+                            <button className="btn btn-success" onClick={() => handleRegisterButton()}>Create new account</button>
                         </div>
                     </div>
                 </div>
