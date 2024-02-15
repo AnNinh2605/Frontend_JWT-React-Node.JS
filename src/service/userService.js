@@ -4,6 +4,6 @@ const createNewUserService = (email, username, password, phone) => {
 }
 
 const loginService = (value, password) => {
-    axios.post("http://localhost:8001/api/v1/login", { value, password })
+    return axios.post("http://localhost:8001/api/v1/login", { value, password })
 }
 export { createNewUserService, loginService }

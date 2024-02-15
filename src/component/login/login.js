@@ -37,9 +37,27 @@ const Login = (props) => {
         let check = validateInput();
         if (check) {
             let responseData = await loginService(value, password);
+            let serverData = responseData.data;
+            if (serverData && +serverData.EC === 0) {
+                let data = {
+                    isAuthenticated: true,
+                    token: 'fake token'
+                }
+                sessionStorage.setItem("account", JSON.stringify(data));
+                toast.success(serverData.EM);
+                history.push("/user");
+                window.location.reload();
+            }
+            else {
+                toast.error(serverData.EM);
+            }
         }
     }
-
+    const handleEnterPress = (event) => {
+        if (event.code = "Enter" && event.charCode===13){
+            handleLoginButton();
+        };
+    }
     return (
         <div className="login-container">
             <div className="container">
@@ -65,6 +83,7 @@ const Login = (props) => {
                             className={checkInputValid.isPassword ? "form-control" : "form-control is-invalid"}
                             placeholder="Password"
                             value={password} onChange={(event) => setPassword(event.target.value)}
+                            onKeyPress={(event) => handleEnterPress(event)}
                         ></input>
                         <button
                             className="btn btn-primary"
