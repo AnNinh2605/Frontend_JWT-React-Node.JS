@@ -76,6 +76,11 @@ const Register = (props) => {
         return true;
     }
 
+    const handleEnterRegister = (event) => {
+        if (event.code === 'Enter' && event.charCode === 13) {
+            handleRegisterButton();
+        }
+    }
     useEffect(() => {
         // axios.get("http://localhost:8001/api/v1/getApi").then(data => {
         //     console.log("Check data", data)
@@ -135,6 +140,7 @@ const Register = (props) => {
                                 className={checkInputValid.checkInputPhone ? "form-control" : "form-control is-invalid"}
                                 placeholder="Your phone number"
                                 value={phone} onChange={(event) => setPhone(event.target.value)}
+                                onKeyPress={(event) => handleEnterRegister(event)}
                             ></input>
                         </div>
                         <button className="btn btn-primary" type="submit" onClick={() => handleRegisterButton()}>Register</button>
