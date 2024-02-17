@@ -7,7 +7,11 @@ const loginService = (value, password) => {
     return axios.post("http://localhost:8001/api/v1/login", { value, password })
 }
 
-const getAllUserService = () => {
-    return axios.get("http://localhost:8001/api/v1/user/read")
+const getAllUserService = (page, limit) => {
+    return axios.get(`http://localhost:8001/api/v1/user/read?page=${page}&limit=${limit}`)
 }
-export { createNewUserService, loginService, getAllUserService }
+
+const deleteUserService = (id) => {
+    return axios.delete(`http://localhost:8001/api/v1/user/delete/${id}`)
+}
+export { createNewUserService, loginService, getAllUserService, deleteUserService }
