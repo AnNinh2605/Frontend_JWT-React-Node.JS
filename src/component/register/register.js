@@ -111,6 +111,15 @@ const Register = (props) => {
                             ></input>
                         </div>
                         <div className="form-group">
+                            <label>Phone number:</label>
+                            <input type="text"
+                                className={checkInputValid.checkInputPhone ? "form-control" : "form-control is-invalid"}
+                                placeholder="Your phone number"
+                                value={phone} onChange={(event) => setPhone(event.target.value)}
+                                onKeyPress={(event) => handleEnterRegister(event)}
+                            ></input>
+                        </div>
+                        <div className="form-group">
                             <label>Username:</label>
                             <input type="text"
                                 className={checkInputValid.checkInputUsername ? "form-control" : "form-control is-invalid"}
@@ -132,15 +141,6 @@ const Register = (props) => {
                                 className={checkInputValid.checkInputConfirmPassword ? "form-control" : "form-control is-invalid"}
                                 placeholder="Re-enter password"
                                 value={confirmPassword} onChange={(event) => setConfirmPassword(event.target.value)}
-                            ></input>
-                        </div>
-                        <div className="form-group">
-                            <label>Phone number:</label>
-                            <input type="text"
-                                className={checkInputValid.checkInputPhone ? "form-control" : "form-control is-invalid"}
-                                placeholder="Your phone number"
-                                value={phone} onChange={(event) => setPhone(event.target.value)}
-                                onKeyPress={(event) => handleEnterRegister(event)}
                             ></input>
                         </div>
                         <button className="btn btn-primary" type="submit" onClick={() => handleRegisterButton()}>Register</button>

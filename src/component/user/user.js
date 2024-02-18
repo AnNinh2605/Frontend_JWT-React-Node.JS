@@ -4,6 +4,7 @@ import { getAllUserService, deleteUserService } from '../../service/userService'
 import { useEffect, useState } from "react";
 import ReactPaginate from 'react-paginate';
 import ModalDetele from "./modalDelete";
+import ModalUser from "./modalUser";
 import { toast } from 'react-toastify';
 
 const User = () => {
@@ -27,12 +28,11 @@ const User = () => {
     }
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1)
-    };
+    }
     const handleDeleteButton = (user) => {
         setShowModalDelete(true);
         setDataModal(user);
     }
-
     const handleClose = () => {
         setShowModalDelete(false);
         setDataModal({});
@@ -127,7 +127,8 @@ const User = () => {
                     </div>
                 </div>
             </div>
-            <ModalDetele show={showModalDelete} handleClose={handleClose} confirmDelete={confirmDelete} dataModal = {dataModal} />
+            <ModalDetele show={showModalDelete} handleClose={handleClose} confirmDelete={confirmDelete} dataModal={dataModal} />
+            <ModalUser show={true} title={"Create new user"} />
         </>
     );
 };

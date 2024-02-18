@@ -14,4 +14,9 @@ const getAllUserService = (page, limit) => {
 const deleteUserService = (id) => {
     return axios.delete(`http://localhost:8001/api/v1/user/delete/${id}`)
 }
-export { createNewUserService, loginService, getAllUserService, deleteUserService }
+
+const getAllGroupService = () => {
+    return axios.get(`http://localhost:8001/api/v1/group/read`)
+}
+
+export { createNewUserService, loginService, getAllUserService, deleteUserService, getAllGroupService }
