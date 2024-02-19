@@ -15,6 +15,10 @@ const User = () => {
 
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [dataModal, setDataModal] = useState({});
+    
+    // modal modify user
+    const [showModalUser, setShowModalUser] = useState(false);
+    const [actionModal, setActionModal] = useState("CREATE");
 
     let serverData = async () => {
         let serverData = await getAllUserService(currentPage, currentLimit);
@@ -49,6 +53,20 @@ const User = () => {
         }
     }
 
+    //create new user
+    const handleAddNewButton = () => {
+        setShowModalUser(true);
+    }
+    // Modify user
+    const handleEditButton = (user) => {
+        setActionModal('MODIFY');
+        setShowModalUser(true);
+        setDataModal(user);
+    }
+    //close modal
+    const handleCloseUserModal = () => {
+        setShowModalUser(false);
+    }
     useEffect(() => {
         serverData()
     }, [currentPage])
@@ -61,7 +79,7 @@ const User = () => {
                         <div>
                             <h3>User list</h3>
                             <button className="btn btn-primary">Refresh</button>
-                            <button className="btn btn-success">Add new user</button>
+                            <button className="btn btn-success" onClick={() => handleAddNewButton()} >Add new user</button>
                         </div>
                         <table className="table table-bordered table-hover">
                             <thead>
@@ -80,13 +98,15 @@ const User = () => {
                                         {userList.map((item, index) => {
                                             return (
                                                 <tr key={`row-${index}`}>
-                                                    <td>{index + 1}</td>
+                                                    <td>{(currentPage - 1) * currentLimit + index + 1}</td>
                                                     <td>{item.id}</td>
                                                     <td>{item.email}</td>
                                                     <td>{item.username}</td>
                                                     <td>{item.Group ? item.Group.name : ''}</td>
                                                     <td className="d-flex gap-2">
-                                                        <button className="btn btn-warning">Edit</button>
+                                                        <button className="btn btn-warning"
+                                                            onClick={() => handleEditButton(item)}
+                                                        >Edit</button>
                                                         <button className="btn btn-danger"
                                                             onClick={() => handleDeleteButton(item)}>Delete</button>
                                                     </td>
@@ -128,7 +148,9 @@ const User = () => {
                 </div>
             </div>
             <ModalDetele show={showModalDelete} handleClose={handleClose} confirmDelete={confirmDelete} dataModal={dataModal} />
-            <ModalUser show={true} title={"Create new user"} />
+            <ModalUser show={showModalUser} handleClose={handleCloseUserModal} action={actionModal}
+                dataModal={ dataModal }
+            />
         </>
     );
 };
