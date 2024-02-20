@@ -6,6 +6,7 @@ import ReactPaginate from 'react-paginate';
 import ModalDetele from "./modalDelete";
 import ModalUser from "./modalUser";
 import { toast } from 'react-toastify';
+import 'font-awesome/css/font-awesome.min.css';
 
 const User = () => {
     const [userList, setUserList] = useState([]);
@@ -15,16 +16,17 @@ const User = () => {
 
     const [showModalDelete, setShowModalDelete] = useState(false);
     const [dataModal, setDataModal] = useState({});
-    
+
     // modal modify user
     const [showModalUser, setShowModalUser] = useState(false);
-    const [actionModal, setActionModal] = useState("CREATE");
+    const [dataUserModal, setDataUserModal] = useState({});
+    const [actionModal, setActionModal] = useState('');
 
     let serverData = async () => {
         let serverData = await getAllUserService(currentPage, currentLimit);
-        if (serverData && serverData.data && +serverData.data.EC === 0) {
-            setUserList(serverData.data.DT.users);
-            setTotalPage(serverData.data.DT.totalPages);
+        if (serverData && serverData && +serverData.EC === 0) {
+            setUserList(serverData.DT.users);
+            setTotalPage(serverData.DT.totalPages);
         }
         else {
             setUserList([]);
@@ -43,29 +45,36 @@ const User = () => {
     }
     const confirmDelete = async () => {
         let results = await deleteUserService(dataModal.id);
-        if (results && results.data.EC === 0) {
-            toast.success(results.data.EM)
+        if (results && results.EC === 0) {
+            toast.success(results.EM)
             await serverData()
             setShowModalDelete(false);
         }
         else {
-            toast.error(results.data.EM)
+            toast.error(results.EM)
         }
     }
 
     //create new user
     const handleAddNewButton = () => {
         setShowModalUser(true);
+        setActionModal('CREATE');
     }
     // Modify user
     const handleEditButton = (user) => {
         setActionModal('MODIFY');
         setShowModalUser(true);
-        setDataModal(user);
+        setDataUserModal(user);
     }
     //close modal
-    const handleCloseUserModal = () => {
+    const handleCloseUserModal = async () => {
         setShowModalUser(false);
+        setDataUserModal({}); // cause error
+        await serverData();
+    }
+    // refresh page
+    const handleRefresh = async () => {
+        await serverData();
     }
     useEffect(() => {
         serverData()
@@ -77,9 +86,13 @@ const User = () => {
                 <div className="row">
                     <div className="user-table mt-2">
                         <div>
-                            <h3>User list</h3>
-                            <button className="btn btn-primary">Refresh</button>
-                            <button className="btn btn-success" onClick={() => handleAddNewButton()} >Add new user</button>
+                            <h3>Manage list</h3>
+                            <button className="btn btn-primary my-2"
+                                onClick={() => handleRefresh()}
+                            ><i className="fa fa-refresh"></i>Refresh</button>
+                            <button className="btn btn-success mx-2 my-2 " onClick={() => handleAddNewButton()} >
+                                <i className="fa fa-plus-circle"></i>
+                                Add new user</button>
                         </div>
                         <table className="table table-bordered table-hover">
                             <thead>
@@ -104,11 +117,14 @@ const User = () => {
                                                     <td>{item.username}</td>
                                                     <td>{item.Group ? item.Group.name : ''}</td>
                                                     <td className="d-flex gap-2">
-                                                        <button className="btn btn-warning"
+                                                        <span title="Edit" className="edit"
                                                             onClick={() => handleEditButton(item)}
-                                                        >Edit</button>
-                                                        <button className="btn btn-danger"
-                                                            onClick={() => handleDeleteButton(item)}>Delete</button>
+                                                        >
+                                                            <i className="fa fa-pencil"></i></span>
+                                                        <span title="Delete" className="delete mx-1"
+                                                            onClick={() => handleDeleteButton(item)}>
+                                                            <i className="fa fa-trash"></i>
+                                                        </span>
                                                     </td>
                                                 </tr>)
                                         })}
@@ -149,7 +165,7 @@ const User = () => {
             </div>
             <ModalDetele show={showModalDelete} handleClose={handleClose} confirmDelete={confirmDelete} dataModal={dataModal} />
             <ModalUser show={showModalUser} handleClose={handleCloseUserModal} action={actionModal}
-                dataModal={ dataModal }
+                dataModal={dataUserModal}
             />
         </>
     );

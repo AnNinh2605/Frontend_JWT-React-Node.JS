@@ -29,7 +29,7 @@ const Register = (props) => {
         let check = isValidateInfor();
         if (check) {
             let response = await createNewUserService(email, username, password, phone);
-            let serverData = response.data;
+            let serverData = response;
             if (+serverData.EC === 0) {
                 toast.success(serverData.EM)
                 history.push("/login");

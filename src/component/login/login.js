@@ -37,7 +37,7 @@ const Login = (props) => {
         let check = validateInput();
         if (check) {
             let responseData = await loginService(value, password);
-            let serverData = responseData.data;
+            let serverData = responseData;
             if (serverData && +serverData.EC === 0) {
                 let data = {
                     isAuthenticated: true,

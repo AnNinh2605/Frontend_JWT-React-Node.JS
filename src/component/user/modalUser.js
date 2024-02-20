@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
-import { getAllGroupService, createUserService } from '../../service/userService'
+import { getAllGroupService, createUserService, modifyUserService } from '../../service/userService'
 import './user.scss'
 import { useEffect, useState } from 'react';
 import _ from 'lodash'
@@ -26,7 +26,7 @@ const ModalUser = (props) => {
         sex: true,
         group: true,
     }
-    const [userState, setUserState] = useState(defaultUserState);
+    const [userState, setUserState] = useState(defaultUserState);  // user information
     const [validInput, setValidInput] = useState(defaultValidInput);
     const [groupList, setGroupList] = useState([]);
 
@@ -38,10 +38,10 @@ const ModalUser = (props) => {
 
     const fetchGroup = async () => {
         let groupData = await getAllGroupService();
-        if (groupData && groupData.data.EC === 0) {
-            setGroupList(groupData.data.DT)
-            if (groupData.data.DT && groupData.data.DT.length > 0) {
-                let group = groupData.data.DT;
+        if (groupData && groupData.EC === 0) {
+            setGroupList(groupData.DT)
+            if (groupData.DT && groupData.DT.length > 0) {
+                let group = groupData.DT;
                 setUserState({ ...defaultUserState, group: group[0].id }) //assign default value for group
             }
         }
@@ -51,59 +51,67 @@ const ModalUser = (props) => {
     }
 
     const validateInput = () => {
-        setValidInput(defaultValidInput);
-        let arrCheck = ["email", "username", "phone", "password", "address"]
-        for (let i = 0; i < arrCheck.length; i++) {
-            if (!userState[arrCheck[i]]) {
-                let _validInput = _.cloneDeep(defaultValidInput);
-                _validInput[arrCheck[i]] = false;
-                setValidInput(_validInput)
-                toast.error(`Missing ${arrCheck[i]}`)
+        if (action === "MODIFY") return true;
+        else {
+            setValidInput(defaultValidInput);
+            let arrCheck = ["email", "username", "phone", "password", "address"]
+            for (let i = 0; i < arrCheck.length; i++) {
+                if (!userState[arrCheck[i]]) {
+                    let _validInput = _.cloneDeep(defaultValidInput);
+                    _validInput[arrCheck[i]] = false;
+                    setValidInput(_validInput)
+                    toast.error(`Missing ${arrCheck[i]}`)
+                    return false;
+                }
+            }
+            let re = /\S+@\S+\.\S+/;
+            let email = userState["email"];
+            if (!re.test(email)) {
+                toast.error("Email is not valid")
                 return false;
             }
+            let password = userState["password"];
+            if (password.length < 8) {
+                toast.error("Password must at least 8 letters")
+                return false;
+            }
+            return true;
         }
-        let re = /\S+@\S+\.\S+/;
-        let email = userState["email"];
-        if (!re.test(email)) {
-            toast.error("Email is not valid")
-            return false;
-        }
-        let password = userState["password"];
-        if (password.length < 8) {
-            toast.error("Password must at least 8 letters")
-            return false;
-        }
-        return true;
     }
     const handleCreateUserButton = async () => {
         let check = validateInput();
         if (check) {
-            let serverData = await createUserService({ ...userState, groupId: userState['group'] })
-            if (serverData && serverData.data.EC === 0) {
-                toast.success(serverData.data.EM)
+            let serverData = action === "CREATE" ?
+                await createUserService({ ...userState, groupId: userState['group'] }) :
+                await modifyUserService(userState);
+            if (serverData && serverData.EC === 0) {
+                toast.success(serverData.EM)
                 props.handleClose();
                 setUserState({ ...defaultUserState, group: groupList[0].id })
             }
-            if (serverData && serverData.data.EC !== 0) {
-                toast.error(serverData.data.EM)
+            if (serverData && serverData.EC !== 0) {
+                toast.error(serverData.EM)
                 let _validInput = _.cloneDeep(defaultValidInput);
-                _validInput[serverData.data.DT] = false;
+                _validInput[serverData.DT] = false;
                 setValidInput(_validInput)
             }
         }
+    }
+    const closeModal = () => {
+        props.handleClose();
+        setValidInput(defaultValidInput);
     }
     useEffect(() => {
         fetchGroup()
     }, [])
     useEffect(() => {
         if (action === 'MODIFY') {
-            console.log("check data to edit form", dataModal)
-            setUserState(dataModal)
+            setUserState({ ...dataModal, group: dataModal.Group ? dataModal.Group.id : '' })
         }
     }, [dataModal])
     return (
         <>
-            <Modal size="lg" show={props.show} onHide={props.handleClose} className='modalUser'>
+            <Modal size="lg" show={props.show} onHide={closeModal} className='modalUser'>
                 <Modal.Header closeButton>
                     <Modal.Title><span>{props.action === 'CREATE' ? 'Create new user' : 'Modify user'}</span></Modal.Title>
                 </Modal.Header>
@@ -112,6 +120,7 @@ const ModalUser = (props) => {
                         <div className="form-group col-sm-6 col-12">
                             <label>Email address (<span className='text-danger'>*</span>) :</label>
                             <input type="text"
+                                disabled={props.action === 'MODIFY' ? true : false}
                                 className={validInput.email ? "form-control" : "form-control is-invalid"}
                                 placeholder="Email address"
                                 value={userState.email}
@@ -121,6 +130,7 @@ const ModalUser = (props) => {
                         <div className="form-group col-sm-6 col-12">
                             <label>Phone number (<span className='text-danger'>*</span>) :</label>
                             <input type="text"
+                                disabled={props.action === 'MODIFY' ? true : false}
                                 className={validInput.phone ? "form-control" : "form-control is-invalid"}
                                 placeholder="Your phone number"
                                 value={userState.phone}
@@ -164,7 +174,6 @@ const ModalUser = (props) => {
                                 onChange={(event) => { handleOnchangeInput(event.target.value, "sex") }}
                                 value={userState.sex}
                             >
-                                <option value={'Choose...'}>Choose...</option>
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
                                 <option value="Other">Other</option>
@@ -187,11 +196,11 @@ const ModalUser = (props) => {
                     </div>
                 </Modal.Body>
                 <Modal.Footer>
-                    <Button variant="secondary" onClick={props.handleClose}>
+                    <Button variant="secondary" onClick={closeModal}>
                         Close
                     </Button>
                     <Button variant="primary" onClick={() => handleCreateUserButton()} >
-                        Create
+                        {props.action === 'CREATE' ? 'Create' : 'Save'}
                     </Button>
                 </Modal.Footer>
             </Modal>
