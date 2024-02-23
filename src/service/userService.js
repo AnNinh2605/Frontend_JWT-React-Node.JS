@@ -20,12 +20,16 @@ const deleteUserService = (id) => {
 const createUserService = (userData) => {
     return axios.post("/user/create", { ...userData })
 }
+//get user account
+const getUserAccountService = () => {
+    return axios.get("/account")
+}
 
 const modifyUserService = (userData) => {
     return axios.put("/user/edit", { ...userData })
 }
 const getAllGroupService = () => {
-    return axios.get(`/group/read`)
+    return axios.get('/group/read')
 }
 
 
@@ -36,5 +40,6 @@ export {
     deleteUserService,
     getAllGroupService,
     createUserService,
-    modifyUserService
+    modifyUserService,
+    getUserAccountService
 }

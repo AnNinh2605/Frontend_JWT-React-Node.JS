@@ -1,10 +1,13 @@
 import "./login.scss"
 import { useHistory } from "react-router-dom";
-import { useState } from 'react'
+import { useContext, useState } from 'react'
 import { toast } from 'react-toastify';
 import { loginService } from '../../service/userService'
+import { UserContext } from "../../UserContext/userContext";
 
 const Login = (props) => {
+    const { loginContext } = useContext(UserContext);
+
     let history = useHistory();
     const handleRegisterButton = () => {
         history.push("/register");
@@ -37,24 +40,33 @@ const Login = (props) => {
         let check = validateInput();
         if (check) {
             let responseData = await loginService(value, password);
-            let serverData = responseData;
-            if (serverData && +serverData.EC === 0) {
+            if (responseData && +responseData.EC === 0) {
+                let email = responseData.DT.email;
+                let username = responseData.DT.username;
+                let groupRole = responseData.DT.groupRole;
+                let token = responseData.DT.access_token;
                 let data = {
                     isAuthenticated: true,
-                    token: 'fake token'
+                    token: token,
+                    account: {
+                        email,
+                        username,
+                        groupRole
+                    }
                 }
-                sessionStorage.setItem("account", JSON.stringify(data));
-                toast.success(serverData.EM);
+                loginContext(data);
+
+                toast.success(responseData.EM);
                 history.push("/user");
-                window.location.reload();
+                // window.location.reload();
             }
             else {
-                toast.error(serverData.EM);
+                toast.error(responseData.EM);
             }
         }
     }
     const handleEnterPress = (event) => {
-        if (event.code = "Enter" && event.charCode===13){
+        if (event.code = "Enter" && event.charCode === 13) {
             handleLoginButton();
         };
     }
