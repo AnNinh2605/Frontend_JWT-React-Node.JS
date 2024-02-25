@@ -9,6 +9,10 @@ const loginService = (value, password) => {
     return axios.post("/login", { value, password })
 }
 
+const logoutService = () => {
+    return axios.post("/logout")
+}
+
 const getAllUserService = (page, limit) => {
     return axios.get(`/user/read?page=${page}&limit=${limit}`)
 }
@@ -36,6 +40,7 @@ const getAllGroupService = () => {
 export {
     createNewUserService,
     loginService,
+    logoutService,
     getAllUserService,
     deleteUserService,
     getAllGroupService,

@@ -54,6 +54,7 @@ const Login = (props) => {
                         groupRole
                     }
                 }
+                localStorage.setItem("jwt", token);
                 loginContext(data);
 
                 toast.success(responseData.EM);

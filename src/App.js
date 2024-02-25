@@ -4,7 +4,7 @@ import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import _ from 'lodash'
 import React, { useContext } from "react";
-import Nav from './component/navigation/nav';
+import Navbars from './component/navigation/nav';
 import AppRoute from './component/route/appRoute'
 // react loader spider
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
@@ -30,7 +30,7 @@ function App() {
             <div>Loading...</div>
           </div> : <>
             <div className='app-header'>
-              <Nav />
+              <Navbars />
             </div>
             <div className='app-container'>
               <AppRoute />
