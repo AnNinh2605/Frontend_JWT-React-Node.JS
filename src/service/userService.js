@@ -36,7 +36,6 @@ const getAllGroupService = () => {
     return axios.get('/group/read')
 }
 
-
 export {
     createNewUserService,
     loginService,

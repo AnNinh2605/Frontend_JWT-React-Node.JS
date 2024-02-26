@@ -1,10 +1,14 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import './role.scss'
 import 'font-awesome/css/font-awesome.min.css';
-import _, { cloneDeep } from 'lodash'
+import _ from 'lodash'
+import { toast } from 'react-toastify';
 import { v4 as uuidv4 } from 'uuid';
+import { createRoleService } from '../../service/roleService'
+import { TableRole } from './tableRole';
 
 const Role = (props) => {
+    const childRef = useRef();
     const defautValidInput = { url: '', description: '', isValidInput: true };
 
     const [listChild, setListChild] = useState({
@@ -31,21 +35,41 @@ const Role = (props) => {
         delete _listChild[key];
         setListChild(_listChild);
     }
-    const handleSaveInput = () => {
+    // transform data to array and sent to database
+    const dataRolePersist = () => {
+        let data = [];
+        Object.entries(listChild).forEach(([key, value]) => {
+            data.push({
+                url: value.url,
+                description: value.description
+            });
+        });
+        return data;
+    }
+    const handleSaveInput = async () => {
         let isEmpty = Object.entries(listChild).find(([key, child], index) => {
             return child && !child.url
         })
         if (!isEmpty) {
             // call api
+            let data = dataRolePersist();
+            let results = await createRoleService(data);
+            if (results && results.EC === 0) {
+                toast.success(results.EM);
+                childRef.current.getAllRole()
+            }
+            else {
+                toast.error(results.EM)
+            }
         }
         else {
             let _listChild = _.cloneDeep(listChild);
             let key = isEmpty[0];
             _listChild[key]['isValidInput'] = false;
             setListChild(_listChild);
+            toast.error("Missing input URL");
         }
     }
-    console.log("check", listChild);
     useEffect(() => {
         Object.entries(listChild).map(([key, value]) => {
         });
@@ -60,7 +84,7 @@ const Role = (props) => {
                             <div className='row role-parent' key={`child-${key}`}>
                                 <div className='col-5 form-group'>
                                     <label>URL:</label>
-                                    <input type='text' className='form-control' value={child.url}
+                                    <input type='text' className={child.isValidInput ? 'form-control' : 'form-control is-invalid'} value={child.url}
                                         onChange={(event) => handleOnchangeInput('url', event.target.value, key)}
                                     ></input>
                                 </div>
@@ -80,8 +104,13 @@ const Role = (props) => {
                             </div>
                         ))
                     }
+                    <button className='btn btn-primary mt-2' onClick={() => handleSaveInput()}>Save</button>
                 </div>
-                <button className='btn btn-primary mt-2' onClick={() => handleSaveInput()}>Save</button>
+                <hr />
+                <div className='table-role'>
+                    <h4>List roles</h4>
+                    <TableRole ref={childRef}/>
+                </div>
             </div>
         </div>
     )
