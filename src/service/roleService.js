@@ -11,4 +11,7 @@ const deleteRoleService = (role) => {
 const roleByGroupService = (groupId) => {
     return axios.get(`/role/by-group/${groupId}`);
 }
-export { createRoleService, readRoleService, deleteRoleService, roleByGroupService }
+const assignNewRoleService = (data) => {
+    return axios.post('/role/assign-by-group', { data });
+}
+export { createRoleService, readRoleService, deleteRoleService, roleByGroupService, assignNewRoleService }

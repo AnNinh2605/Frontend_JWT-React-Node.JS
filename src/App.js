@@ -3,7 +3,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
 import _ from 'lodash'
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Navbars from './component/navigation/nav';
 import AppRoute from './component/route/appRoute'
 // react loader spider
@@ -12,10 +12,18 @@ import { Circles } from 'react-loader-spinner'
 // userContext
 import { UserContext } from "./UserContext/userContext";
 
+import { Scrollbars } from 'react-custom-scrollbars';
+
 function App() {
   const { user } = useContext(UserContext);
+  const [scrollHeight, setscrollHeight] = useState(0);
+
+  useEffect(() => {
+    let windowHeight = window.innerHeight;
+    setscrollHeight(windowHeight);
+  }, [user])
   return (
-    <>
+    <Scrollbars autoHide style={{ height: scrollHeight }}>
       <Router>
         {user && user.isLoading ?
           <div className='loading'>
@@ -48,7 +56,7 @@ function App() {
           </>
         }
       </Router>
-    </>
+    </Scrollbars>
   );
 }
 
