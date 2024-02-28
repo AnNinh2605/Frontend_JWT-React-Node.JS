@@ -5,6 +5,7 @@ import User from '../user/user';
 import PrivateRoute from "./privateRoute";
 import Role from "../Role/role";
 import { GroupRole } from "../groupRole/groupRole";
+import Home from "../home/home";
 
 const AppRoute = (props) => {
     return (
@@ -16,9 +17,6 @@ const AppRoute = (props) => {
                 <Route path="/project">
                     project
                 </Route>
-                <Route path="/about">
-                    about
-                </Route>
                 <Route path="/login">
                     <Login />
                 </Route>
@@ -26,7 +24,7 @@ const AppRoute = (props) => {
                     <Register />
                 </Route>
                 <Route path="/" exact>
-                    Home
+                    <Home />
                 </Route >
                 <Route path="*">
                     404 not found
