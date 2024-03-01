@@ -36,7 +36,7 @@ const Navbars = (props) => {
             <>
                 <Navbar expand="lg" className="navbar">
                     <Container>
-                        <Navbar.Brand href="#home">
+                        <Navbar.Brand href="/">
                             <img
                                 src={reactLogo}
                                 width="30"

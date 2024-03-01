@@ -50,7 +50,7 @@ const Home = (props) => {
                 <h5>Contributions:</h5>
                 <hr />
                 <p>
-                    Contributions to this project are welcome! If you find any bugs, have feature requests, or would like to contribute enhancements, feel free to let me know by email: <span className='text-decoration-underline text-primary'>anninh1511@gmail.com.</span> Thanks!
+                    Contributions to this project are welcome! If you find any bugs, have feature requests, or would like to contribute enhancements, feel free to let me know by email: <span className='text-decoration-underline text-primary'>anninh1511@gmail.com.</span> Thank you!
                 </p>
             </div>
         </div>

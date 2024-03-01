@@ -12,6 +12,7 @@ const Register = (props) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [phone, setPhone] = useState("");
+    let history = useHistory();
 
     const setDefaultInputValue = {
         checkInputEmail: true,
@@ -22,7 +23,6 @@ const Register = (props) => {
     }
     const [checkInputValid, setInputValid] = useState(setDefaultInputValue);
 
-    let history = useHistory();
     const handleHaveAccountButton = () => {
         history.push("/login");
     }

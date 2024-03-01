@@ -71,8 +71,8 @@ const Role = (props) => {
         }
     }
     useEffect(() => {
-        Object.entries(listChild).map(([key, value]) => {
-        });
+        // Object.entries(listChild).map(([key, value]) => {
+        // });
     }, [])
     return (
         <div className='role-container'>

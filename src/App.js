@@ -2,7 +2,6 @@ import './App.scss';
 import { BrowserRouter as Router } from "react-router-dom";
 import { ToastContainer } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import _ from 'lodash'
 import React, { useContext, useEffect, useState } from "react";
 import Navbars from './component/navigation/nav';
 import AppRoute from './component/route/appRoute'

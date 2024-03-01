@@ -25,7 +25,7 @@ const UserProvider = ({ children }) => {
     };
     // get user account infor
     const fetchUser = async () => {
-        let responseData = await getUserAccountService();
+        let responseData = window.location.pathname !== '/' && await getUserAccountService();
         if (responseData && responseData.EC === 0) {
             let email = responseData.DT.email;
             let username = responseData.DT.username;
@@ -44,12 +44,6 @@ const UserProvider = ({ children }) => {
         }
     }
     useEffect(() => {
-        // if (window.location.pathname !== '/' && window.location.pathname !== '/login') {
-        //     fetchUser();
-        // }
-        // else {
-        //     setUser({ ...user, isLoading: false });
-        // }
         fetchUser();
     }, [])
 
