@@ -24,7 +24,6 @@ const Navbars = (props) => {
         localStorage.removeItem('jwt')  // delete jwt in localStorage
         logoutContext();    // clear user in context
         if (logout && +logout.EC === 0) {
-            toast.success(logout.EM)
             history.push('/login');
         }
         else {
@@ -51,7 +50,6 @@ const Navbars = (props) => {
                                 <NavLink to="/user" className="nav-link">Users</NavLink>
                                 <NavLink to="/role" className="nav-link">Role</NavLink>
                                 <NavLink to="/group-role" className="nav-link">Group-Role</NavLink>
-                                <NavLink to="/project" className="nav-link">Project</NavLink>
                             </Nav>
                             <Nav className="dropdown_menu">
                                 {user && user.isAuthenticated === true ?

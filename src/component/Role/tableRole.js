@@ -58,13 +58,9 @@ const TableRole = forwardRef((props, ref) => {
                                     <td>{item.url}</td>
                                     <td>{item.description}</td>
                                     <td className="d-flex gap-2">
-                                        <span title="Edit" className="edit"
-                                            onClick={() => handleEditButton(item)}
-                                        >
-                                            <i className="fa fa-pencil text-warning"></i></span>
                                         <span title="Delete" className="delete mx-1"
                                             onClick={() => handleDeleteButton(item)}>
-                                            <i className="fa fa-trash text-danger"></i>
+                                            <i className="fa fa-trash text-danger" role='button'></i>
                                         </span>
                                     </td>
                                 </tr>)

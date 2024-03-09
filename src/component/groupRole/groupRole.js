@@ -122,12 +122,13 @@ const GroupRole = (props) => {
                             tickRoleList.map((item, index) => {
                                 return (<>
                                     {selectGroup.length > 0 &&
-                                        <div className="form-check" key={`key-${index}`}>
+                                        <div className="form-check" key={`keydiv-${index}`}>
                                             <input
                                                 className="form-check-input"
                                                 type="checkbox"
                                                 value={item.id}
                                                 id={`key-${index}`}
+                                                key={`keyinput-${index}`}
                                                 checked={item.tick}
                                                 onChange={(event) => handleChangeCheckbox(event.target.value)} />
                                             <label className="form-check-label" htmlFor={`key-${index}`}>

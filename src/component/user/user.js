@@ -11,7 +11,7 @@ import 'font-awesome/css/font-awesome.min.css';
 const User = () => {
     const [userList, setUserList] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
-    const [currentLimit, setCurrentLimit] = useState(3);
+    const [currentLimit, setCurrentLimit] = useState(5);
     const [totalPage, setTotalPage] = useState(0);
 
     const [showModalDelete, setShowModalDelete] = useState(false);

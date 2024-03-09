@@ -25,7 +25,11 @@ const UserProvider = ({ children }) => {
     };
     // get user account infor
     const fetchUser = async () => {
-        let responseData = window.location.pathname !== '/' && await getUserAccountService();
+        let responseData = 
+        window.location.pathname !== '/' && 
+        window.location.pathname !== '/login' &&
+        window.location.pathname !== '/register' &&
+        await getUserAccountService();
         if (responseData && responseData.EC === 0) {
             let email = responseData.DT.email;
             let username = responseData.DT.username;

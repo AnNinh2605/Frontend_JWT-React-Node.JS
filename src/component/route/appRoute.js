@@ -14,9 +14,6 @@ const AppRoute = (props) => {
                 <PrivateRoute path="/user" component={User} />
                 <PrivateRoute path="/role" component={Role} />
                 <PrivateRoute path="/group-role" component={GroupRole} />
-                <Route path="/project">
-                    project
-                </Route>
                 <Route path="/login">
                     <Login />
                 </Route>
